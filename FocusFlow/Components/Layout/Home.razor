@@ -1,0 +1,84 @@
+﻿@page "/"
+            {
+                <div class="task-card @(task.IsCompleted ? "completed" : "")">
+
+                    <div class="task-content">
+
+                        <h3>@task.Title</h3>
+
+                        <p>@task.Description</p>
+
+                        <small>
+                            Created: @task.CreatedAt.ToString("dd MMM yyyy hh:mm tt")
+                        </small>
+
+                    </div>
+
+                    <div class="task-actions">
+
+                        <button class="complete-btn"
+                                @onclick="() => ToggleTask(task.Id)">
+
+                            @(task.IsCompleted ? "Undo" : "Complete")
+
+                        </button>
+
+                        <button class="delete-btn"
+                                @onclick="() => DeleteTask(task.Id)">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<TodoTask> tasks = new();
+
+    private TodoTask newTask = new();
+
+    protected override void OnInitialized()
+    {
+        LoadTasks();
+    }
+
+    private void LoadTasks()
+    {
+        tasks = TodoService.GetTasks();
+    }
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask.Title))
+        {
+            TodoService.AddTask(new TodoTask
+            {
+                Title = newTask.Title,
+                Description = newTask.Description
+            });
+
+            newTask = new TodoTask();
+
+            LoadTasks();
+        }
+    }
+
+    private void DeleteTask(int id)
+    {
+        TodoService.DeleteTask(id);
+        LoadTasks();
+    }
+
+    private void ToggleTask(int id)
+    {
+        TodoService.ToggleTask(id);
+        LoadTasks();
+    }
+}
