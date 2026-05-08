@@ -1,9 +1,3 @@
 <Solution>
-  <Folder Name="/Models/">
-    <File Path="TodoTask.cs" />
-  </Folder>
-  <Folder Name="/Services/">
-    <File Path="TodoService.cs" />
-  </Folder>
   <Project Path="FocusFlow/FocusFlow.csproj" />
 </Solution>

@@ -1,38 +1,177 @@
 ﻿@page "/"
-            {
-                <div class="task-card @(task.IsCompleted ? "completed" : "")">
+@rendermode InteractiveServer
 
-                    <div class="task-content">
+@using FocusFlow.Models
+@using FocusFlow.Services
 
-                        <h3>@task.Title</h3>
+@inject TodoService TodoService
 
-                        <p>@task.Description</p>
+<PageTitle>FocusFlow</PageTitle>
 
-                        <small>
-                            Created: @task.CreatedAt.ToString("dd MMM yyyy hh:mm tt")
-                        </small>
+<div class="app-container">
 
-                    </div>
+    <div class="hero-section">
 
-                    <div class="task-actions">
+        <div class="hero-content">
+            <h1>FocusFlow</h1>
 
-                        <button class="complete-btn"
-                                @onclick="() => ToggleTask(task.Id)">
+            <p>
+                Organize your work, boost productivity,
+                and stay focused every day.
+            </p>
+        </div>
 
-                            @(task.IsCompleted ? "Undo" : "Complete")
+    </div>
 
-                        </button>
+    <div class="dashboard-grid">
 
-                        <button class="delete-btn"
-                                @onclick="() => DeleteTask(task.Id)">
-                            Delete
-                        </button>
+        <div class="left-panel">
 
-                    </div>
+            <div class="glass-card form-card">
+
+                <div class="section-title">
+                    <h2>Create New Task</h2>
+                    <span>Stay productive</span>
+                </div>
+
+                <div class="form-group">
+
+                    <label>Task Title</label>
+
+                    <input type="text"
+                           placeholder="Enter your task title..."
+                           @bind="newTask.Title" />
 
                 </div>
-            }
-        }
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <textarea placeholder="Write task details..."
+                              @bind="newTask.Description">
+                    </textarea>
+
+                </div>
+
+                <button class="add-task-btn"
+                        @onclick="AddTask">
+
+                    + Add New Task
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="right-panel">
+
+            <div class="stats-row">
+
+                <div class="stats-card">
+
+                    <h3>@tasks.Count</h3>
+                    <p>Total Tasks</p>
+
+                </div>
+
+                <div class="stats-card">
+
+                    <h3>@tasks.Count(x => x.IsCompleted)</h3>
+                    <p>Completed</p>
+
+                </div>
+
+            </div>
+
+            <div class="glass-card task-section">
+
+                <div class="section-title">
+
+                    <h2>Your Tasks</h2>
+
+                    <span>
+                        Manage your workflow
+                    </span>
+
+                </div>
+
+                @if (tasks.Count == 0)
+                {
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ✓
+                        </div>
+
+                        <h3>No Tasks Yet</h3>
+
+                        <p>
+                            Create your first task and start
+                            organizing your workflow.
+                        </p>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="task-list">
+
+                        @foreach (var task in tasks)
+                        {
+                            <div class="task-card @(task.IsCompleted ? "completed" : "")">
+
+                                <div class="task-top">
+
+                                    <div>
+
+                                        <h3>@task.Title</h3>
+
+                                        <p>@task.Description</p>
+
+                                    </div>
+
+                                    <div class="status-dot">
+                                    </div>
+
+                                </div>
+
+                                <div class="task-footer">
+
+                                    <small>
+                                        @task.CreatedAt.ToString("dd MMM yyyy")
+                                    </small>
+
+                                    <div class="task-actions">
+
+                                        <button class="complete-btn"
+                                                @onclick="() => ToggleTask(task.Id)">
+
+                                            @(task.IsCompleted ? "Undo" : "Complete")
+
+                                        </button>
+
+                                        <button class="delete-btn"
+                                                @onclick="() => DeleteTask(task.Id)">
+
+                                            Delete
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
 
     </div>
 
